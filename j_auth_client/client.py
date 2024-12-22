@@ -2,6 +2,8 @@ from datetime import datetime
 from typing import Any, Dict, Optional
 
 from requests import post, request
+from jwt import decode
+from requests.auth import HTTPBasicAuth
 
 
 class JAuthClient:
@@ -22,10 +24,16 @@ class JAuthClient:
         response = self.request(
             method=post,
             url=self.auth_url,
+            data={"grant_type": "client_credentials"},
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            auth=HTTPBasicAuth(self.username, self.password),
+            auth_server_authenticated=False,
         )
 
         self.token = response["access_token"]
-        self.token_expires_at = datetime.fromisoformat(response["expires_at"])
+        self.token_expires_at = datetime.fromtimestamp(
+            int(decode(jwt=self.token, options={"verify_signature": False})["exp"])
+        )
 
     @property
     def __should_authenticate(self):
@@ -35,13 +43,21 @@ class JAuthClient:
         self,
         method: request,
         url: str,
+        json: Optional[Dict[str, Any]] = None,
         headers: Optional[Dict[str, Any]] = None,
-        auth_server_authenticated: Optional[bool] = False,
+        data: Optional[Dict[str, Any]] = None,
+        auth: Optional[HTTPBasicAuth] = None,
+        auth_server_authenticated: Optional[bool] = True,
     ) -> dict:
-        if not headers:
-            headers = {}
+        json = json or {}
+        headers = headers or {}
+        data = data or {}
 
         if auth_server_authenticated and self.__should_authenticate:
             self.__authenticate()
+            headers["Authorization"] = f"Bearer {self.token}"
 
-        return method(url=url, headers=headers).json()
+        response = method(url=url, headers=headers, json=json, data=data, auth=auth)
+        response.raise_for_status()
+
+        return response.json()

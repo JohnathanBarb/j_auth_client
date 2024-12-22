@@ -1,13 +1,13 @@
 test:
-	uv run pytest
+	uv run --all-groups pytest -s
 
 tests: test
 
 lint:
-	uv run ruff check
+	uv run --all-groups ruff check
 
 force-lint:
-	uv run ruff check --fix
+	uv run --all-groups ruff check --fix
 
 format:
-	uv run ruff format
+	uv run --all-groups ruff format
