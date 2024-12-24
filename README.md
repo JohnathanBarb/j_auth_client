@@ -1,7 +1,10 @@
 # j_auth_client
 
+A simple client for authenticating with a JAuth server.
 
-## Usage example
+Available on [PyPi](https://pypi.org/project/j-auth-client/).
+
+### Usage example
 
 ```python
 from requests import post
@@ -20,5 +23,30 @@ class MyClient(JAuthClient):
             url=self.routes["create_todo"],
             json=todo,
             auth_server_authenticated=True,
-        )
+        ).json()
 ```
+
+### Contributing
+
+This project is open to contributions. Please feel free to open an issue or a pull request.
+
+#### UV
+To run, build and publish this project we are using [UV](https://docs.astral.sh/uv/).
+See Makefile for available and used commands.
+
+
+#### pre-commit
+
+This project uses [pre-commit](https://pre-commit.com/) to run some checks before committing.
+We use pre-commit to enforce lint, formatting, commit messages and others.
+
+
+After installed pre-commit, run the following command to install the hooks:
+```bash
+pre-commit install
+```
+
+Run all checks without committing:
+```bash
+pre-commit run -a
+````
