@@ -139,7 +139,7 @@ wheels = [
 [[package]]
 name = "j-auth-client"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "pyjwt" },
     { name = "requests" },

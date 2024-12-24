@@ -29,12 +29,12 @@ class JAuthClient:
 
     def __init__(
         self,
-        username: str,
-        password: str,
+        auth_username: str,
+        auth_password: str,
         auth_url: str,
     ):
-        self.username = username
-        self.password = password
+        self.auth_username = auth_username
+        self.auth_password = auth_password
         self.auth_url = auth_url
 
     def __authenticate(self):
@@ -44,7 +44,7 @@ class JAuthClient:
                 url=self.auth_url,
                 data={"grant_type": "client_credentials"},
                 headers={"Content-Type": "application/x-www-form-urlencoded"},
-                auth=HTTPBasicAuth(self.username, self.password),
+                auth=HTTPBasicAuth(self.auth_username, self.auth_password),
                 auth_server_authenticated=False,
             )
 

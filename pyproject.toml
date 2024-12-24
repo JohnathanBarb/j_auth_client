@@ -18,3 +18,7 @@ test = [
 
 [tool.ruff.lint]
 select = ["I"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
